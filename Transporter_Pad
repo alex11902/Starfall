@@ -1,0 +1,218 @@
+@name TSCM TransPorter Pad
+@outputs Target1:entity TargetLocation:vector BeamToPad BeamFromPad BeamToVector
+@persist SavedPos:table ToSay:string WhiteList:array SafeZoneRange SafeZonePos:vector SafeActive T:table [Users]:array
+@model models/Boba_Fett/props/nq_brick.mdl
+runOnChat(1)
+interval(800)
+E=entity()
+
+Users=array(owner(), findPlayerByName("wirebuilder28"), findPlayerByName("phantasma"))
+
+function number array:exists(Value:entity){
+    N=0
+    for (N=0, This:count(), 1){
+        if (This[N,entity]==Value){
+            return 1
+        }
+    }
+    return 0
+}
+
+function void resetPos(){
+    SavedPos = table()
+}
+function void resetSafe(){
+    WhiteList[1, entity] = owner()
+    SafeActive = 0
+}
+function number toggleSafeZone(){
+    if (SafeActive){
+        SafeActive = 0
+    }
+    else{
+        SafeActive = 1
+    }
+    return SafeActive
+}
+function void setSafeZone(Pos:vector, Range){
+    SafeZoneRange = Range
+    SafeZonePos = Pos
+    
+}
+function entity getIntruderInSafeZone(){
+
+    findInSphere(SafeZonePos, SafeZoneRange)
+    findIncludeClass("player")
+    findExcludeEntities(WhiteList)
+    findSortByDistance(SafeZonePos)
+    Intruder = find()
+    return Intruder
+}
+function void addToWhiteList(Player:entity){
+    WhiteList[WhiteList:count()+1, entity] = Player
+}
+function vector getSafePos(Pos:vector){
+    holoCreate(1,Pos)
+    holoColor(1,vec(0,0,0),0)
+    for (X=0,8){
+        holoAng(1,ang(vec(0,X*45,0)))
+        R = rangerOffset(300,Pos,holoEntity(1):forward())
+        if (R:distance()>=50){
+            Vec = R:position()-holoEntity(1):toLocal(R:position())/2
+            return Vec
+        }
+    }
+    return Pos+vec(50,0,0)
+}
+
+ function ossay(S:string){
+    timer("Say",200.0)
+    ToSay = S}
+    
+if(first()|dupefinished()){
+    resetPos(),
+    resetSafe()
+    ossay("This E2 Script is for TSCM Transporter Pad")
+    print(_HUD_PRINTCENTER,"This Scipt is made by wirebuilder28")
+}
+
+function void savePos(Name:string, Pos:vector){
+    SavedPos[Name, vector] = Pos
+}
+function void resetPos(){
+    SavedPos = table()
+}
+function vector getPos(Name:string){
+    Keys = SavedPos:keys()
+    for (Key=1, Keys:count()){
+        if (Keys[Key,string]:find(Name)){
+            return SavedPos[Keys[Key,string],vector]
+        }
+    }
+    return vec(0,0,0)
+}
+
+
+
+if(clk("Say")){
+    botSay("Teleporter","AI",vec(255,93,0),ToSay)
+    ToSay = ""}
+
+
+
+if (chatClk(owner())){
+    LastSaid=owner():lastSaid():explode(" ")
+    Command = LastSaid[1,string]
+    Arg1 = LastSaid[2,string]
+    Arg2 = LastSaid[3,string]
+    
+  
+    if (Command[1] == "!"){
+        hideChat(1)
+    }
+   if (Command=="!tohim"&Arg1){
+    Target1= owner()
+    Target = findPlayerByName(Arg1)
+    TargetLocation = Target:pos()+vec(100,0,0)
+    timer("BeamToVector",500)
+    ossay("To: "+Target:name())
+}
+    if(Command=="!tome"&Arg1){
+        Target1= findPlayerByName(Arg1)
+        Target = owner()
+        TargetLocation = Target:pos()+vec(100,0,0)
+        timer("BeamToVector",500)
+        ossay(+Target1:name()+" To You")
+        
+    }
+    if (Command=="!up"){
+        Target1=owner()
+        TargetLocation= Target1:pos()+vec(0,0,200)
+        timer("BeamToVector",500)
+        ossay("...hacks")
+    }
+    
+    if (Command=="!wall"){
+        Target1=owner()
+        TargetLocation= Target1:pos()+vec(100,0,0)
+        timer("BeamToVector",500)
+        ossay("...hacks")
+    }
+    if (Command=="!down"){
+        Target1=owner()
+        TargetLocation= Target1:pos()+vec(0,0,-200)
+        timer("BeamToVector",500)
+        ossay("...hacks")
+    }
+    
+    if (Command=="!pad"){
+        if(Arg1){            
+        Target1= findPlayerByName(Arg1)                  
+        timer("BeamToPad",500)                            
+        ossay("Beaming: "+Target1:name()+" to the Pad")   
+    }else{
+    Target1 = owner()
+    timer("BeamToPad",500)
+    ossay("Beaming Owner To the Pad")
+}
+
+    
+}
+
+    if (Command=="!save"&Arg1){
+        savePos(Arg1:lower(), owner():pos())
+     ossay("Position Saved as "+Arg1)
+   }
+  if (Command=="!to"){
+        Pos = getPos(Arg1:lower())
+        if (Pos){
+            if (Arg2){
+            Target1 = findPlayerByName(Arg2)
+            TargetLocation = Pos
+            timer("BeamToVector",500)
+            ossay("Beaming "+Target1:name()+" to "+Arg1  )
+          }
+       else{
+               Target1 = owner()
+               TargetLocation  =  Pos
+            timer("BeamToVector",500)            
+            ossay("Beam to "+Arg1)
+           }
+       }
+        else{ossay(Arg1+" not found")}        
+  }
+ elseif (Command == "!list"){
+        ossay("Saved Positions:")
+        for (X=1, SavedPos:count()){
+            ossay("Saved Pos: "+SavedPos:keys()[X, string])
+        }
+    }
+    elseif (Command == "!reset"){
+        reset()
+    }
+    if(Command =="!cargo"&Arg1){
+        Target1 = owner():aimEntity()
+        TargetLocation = owner():aimPos(),getPos(Arg1:lower())+vec(0,0,50)    
+        timer("BeamToVector",500)
+        ossay("Beaming that to "+Arg1)
+}
+
+}
+if (SafeActive){
+    Intruder = getIntruderInSafeZone()
+    if (Intruder){
+        Target1 = Intruder
+        TargetLocation=Intruder:pos(), vec(80.250,-14.159,16080.281), 0
+    }
+}
+
+if(clk("BeamToPad")){
+    BeamToPad=1
+}else{BeamToPad=0}
+if(clk("BeamToVector")){
+    BeamToVector=1
+}else{BeamToVector=0}
+if(clk("BeamFromPad")){
+    BeamFromPad=1
+}else{BeamFromPad=0}
+    
