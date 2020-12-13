@@ -1,0 +1,126 @@
+--@name   Singularity.Teleporter
+--@author wirebuilder28
+--models/spawn_effect
+
+sound = loadLibrary("sounds")
+ents = loadLibrary("ents")
+find = loadLibrary("find")
+time = loadLibrary("time")
+holo = loadLibrary("holograms")
+--input = loadLibrary("input")
+
+local Chip = ents.self()
+local O = ents.self():owner()
+
+Tp = {
+    earth = Vector(3109.781,8718.344,8080.281),
+    shak = Vector(-5837.625,-4031.625,7024.281),
+    up = Vector(111.906,-0.250,16080.281),
+    build = Vector(10569.813,15478.094,-16167.719),
+    hii = Vector(10229.719,8027.000,-6015.719),
+    desert = Vector(11385.006,-12307.104,-9279.968)
+
+}
+
+
+
+
+function sys( c ) -- the communication system :D ( chat )
+
+
+    if( c[1] == "!to") then
+
+        vect = Tp[ c[2] ]
+
+        O:setPos( vect )
+        O:setMaterial( "models/spawn_effect" )
+        O:activeWeapon():setAlpha( 0 )
+        print( "good gawd , drop it" )
+        C = sound.create( O, "Building_Teleporter.Send" )
+        C:play()
+        holo1 = holo.create( O:pos(), O:ang(), "models/bidonstoragedest.mdl", 2.0 )
+        holo1:setMaterial( "effects/com_shield003a" )
+        holo1:setParent( O )
+        time.timer( "holo1R", 2.0, 0, function()
+            if holo1 ~= nil then
+                holo1:remove()
+                O:setMaterial( "" )
+                if O:activeWeapon() ~= nil then
+                O:activeWeapon():setAlpha( 255 )
+            end
+
+             end
+         end)
+    end-- <eof> end
+
+    if( c[1] == "!th" ) then
+
+      Tar = find.playerByName( c[2] )
+
+      O:setPos( Tar:pos()+Vector( 50,50,0 ) )
+      O:setMaterial( "models/spawn_effect" )
+      O:activeWeapon():setAlpha( 0 )
+
+      print("You teleported to "..Tar:name() )
+      C = sound.create( O, "Building_Teleporter.Send" )
+      C:play()
+      holo1 = holo.create( O:pos(), O:ang(), "models/bidonstoragedest.mdl", 2.0 )
+      holo1:setMaterial( "effects/com_shield003a" )
+      holo1:setParent( O )
+      time.timer( "holo2R", 2.0, 0, function()
+            if holo1 ~= nil then
+                holo1:remove()
+                O:setMaterial( "" )
+                if O:activeWeapon() ~= nil then
+                O:activeWeapon():setAlpha( 255 )
+            end
+
+       end
+      end)
+ end
+
+
+ if( c[1] == "!print" ) then
+
+   print(  O:pos() )
+
+end
+
+  if ( c[1] == "!u" ) then
+
+      O:setPos( O:aimPos() )
+      O:setMaterial( "models/spawn_effect" )
+      O:activeWeapon():setAlpha( 0 )
+      C = sound.create( O, "Building_Teleporter.Send" )
+      C:play()
+      holo1 = holo.create( O:pos(), O:ang(), "models/bidonstoragedest.mdl", 2.0 )
+      holo1:setMaterial( "effects/com_shield003a" )
+      holo1:setParent( O )
+      time.timer( "holo3R", 2.0, 0, function()
+            if holo1 ~= nil then
+                holo1:remove()
+                O:setMaterial( "" )
+                if O:activeWeapon() ~= nil then
+                O:activeWeapon():setAlpha( 255 )
+            end
+
+       end
+      end)
+  end
+
+
+
+
+end
+
+function Chat( msg, ply )
+
+    local c = {}
+
+    for i in string.gmatch(msg, "%S+") do --converting the message string into a table.
+        table.insert(c,i)
+    end
+    sys( c ) --send the command to do stuff.
+end
+
+chat.listen( Chat, ents.owner() )
