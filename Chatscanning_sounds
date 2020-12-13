@@ -1,0 +1,154 @@
+--@name Talk.S.
+--@author wirebuilder28
+--@updater STEAM_0:1:61771754
+--@sharedscreen
+--@autoupdate
+
+
+sound = loadLibrary("sounds")
+
+local O = ents.owner()
+
+function comm( msg, ply )
+
+    if ply == O then
+
+        if( msg == "hello") then
+            Sound = sound.create( O, "odessa.nlo_cub_hello" )
+            Sound:play()
+        end
+        if( msg == "hi") then
+            Sound = sound.create( O, "vo/npc/male01/hi01.wav" )
+            Sound:play()
+        end
+        if( msg == "shut up") then
+            Sound = sound.create( O, "vo/npc/male01/answer17.wav" )
+            Sound:play()
+        end
+        if( msg == "yeah") then
+            Sound = sound.create( O, "vo/npc/male01/yeah02.wav" )
+            Sound:play()
+        end
+        if( msg == "nice") then
+            Sound = sound.create( O, "vo/npc/male01/nice.wav" )
+            Sound:play()
+        end
+        if( msg == "ok") then
+            Sound = sound.create( O, "vo/npc/male01/ok01.wav" )
+            Sound:play()
+        end
+        if( msg == "gtho") then
+            Sound = sound.create( O, "vo/npc/female01/gethellout.wav" )
+            Sound:play()
+        end
+        if( msg == "help") then
+            Sound = sound.create( O, "vo/npc/female01/help01.wav" )
+            Sound:play()
+        end
+        if( msg == "sorry") then
+            Sound = sound.create( O, "vo/npc/male01/sorry01.wav" )
+            Sound:play()
+        end
+        if( msg == "never") then
+            Sound = sound.create( O, "citadel.eli_nonever" )
+            Sound:play()
+        end
+        if( msg == "no") then
+            Sound = sound.create( O, "citadel.eli_notobreen" )
+            Sound:play()
+        end
+        if( msg=="you need me" or msg=="youneedme") then
+            Sound = sound.create( O, "citadel.br_youneedme01" )
+            Sound:play()
+        end
+        if( msg == "hey") then
+            Sound = sound.create( O, "canals.shanty_hey" )
+            Sound:play()
+        end
+        if( msg == "duck") then
+            Sound = sound.create( O, "npc_barney.ba_duck" )
+            Sound:play()
+        end
+        if( msg == "good gawd" or msg=="good god") then
+            npc =  "npc_citizen.goodgod"
+            eli =  "citadel.eli_goodgod"
+            Sound = sound.create( O, npc or eli  )
+            Sound:play()
+        end
+        if( msg == "rofl" or msg == "lmao") then
+            Sound = sound.create( O, "citadel.br_laugh01" )
+            Sound:play()
+        end
+        if( msg == "indeed") then
+            Sound = sound.create( O, "ep_02.mag_launch_indeed" )
+            Sound:play()
+        end
+        if( msg == "heydoc" or msg=="hey doc") then
+            Sound = sound.create( O, "vo/npc/male01/heydoc0"..math.random( 1, 2 )..".wav" )
+            Sound:play()
+        end
+        if( msg == "oh no" or msg == "ohno" ) then
+            Sound = sound.create( O, "npc_citizen.ohno" )
+            Sound:play()
+        end
+        if( msg == "what is it?" or msg=="what is it" or msg =="whatisit") then
+            Sound = sound.create( O, "k_lab.kl_whatisit" )
+            Sound:play()
+        end
+        if( msg == "wth") then
+            Sound = sound.create( O, "k_lab.ba_whatthehell" )
+            Sound:play()
+        end
+        if( msg == "run") then
+            Sound = sound.create( O, "vo/npc/male01/strider_run.wav" )
+            Sound:play()
+        end
+        if( msg == "cantuseeimbusy?" or msg=="cant u see im busy?" or msg=="cant you see im busy?") then
+            Sound = sound.create( O, "vo/npc/male01/busy02.wav" )
+            Sound:play()
+        end
+        if( msg == "thank you" or msg == "thank u") then
+            Sound = sound.create( O, "ep_02.mag_launch_thankyou03" )
+            Sound:play()
+        end
+        if( msg == "indeed it is") then
+            Sound = sound.create( O, "vo/k_lab/kl_packing01.wav" )
+            Sound:play()
+        end
+        if( msg == "stfu") then
+            Sound = sound.create( O, "vo/npc/male01/answer17.wav" )
+            Sound:play()
+        end
+        if( msg == "me?" or msg== "me") then
+            Sound = sound.create( O, "Trainyard.man_me" )
+            Sound:play()
+        end
+        if( msg == "follow me" or msg=="follow me!") then
+            Sound = sound.create( O, "coast.le_followme" )
+            Sound:play()
+        end
+        if( msg == "but where will u go?" or msg=="but where will you go?") then
+            Sound = sound.create( O , "novaprospekt.eli_wherewillyougo01" )
+            Sound:play()
+        end
+        if( msg == "stopit" or msg=="stop it" ) then
+            Sound = sound.create( O , "npc_citizen.stopitfm" )
+            Sound:play()
+        end
+        if( msg == "yay" or msg=="hellyay" or msg=="hell yay") then
+            Sound = sound.create( O , "npc_barney.ba_yell" )
+            Sound:play()
+        end
+
+    end--final end for
+end
+
+        function Chat()
+            chat.listen( comm )
+        end
+
+        time.timer( "Chat", 0.5, 0, Chat )
+
+
+
+
